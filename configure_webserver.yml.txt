@@ -1,0 +1,31 @@
+hosts: 192.168.43.152
+tasks:
+- name: Install apache httpd software
+  package: 
+     name=httpd 
+     state=present
+- name: Copy file to httpd root directory
+  copy: 
+     src=/root/home.html
+     dest=/var/www/html/
+- name: Enable HTTP
+  firewalld: 
+     zone=public 
+     port=80/tcp
+     state=enabled 
+     permanent=yes
+- name:Allow 443
+  firewalld: 
+     zone=public 
+     port=443/tcp 
+     state=enabled 
+     permanent=yes
+- name: Restart firewall
+  service: 
+     name=firewalld 
+     state=restarted
+- name: Start httpd
+  service: 
+     name=httpd 
+     enabled=yes 
+     state=started 
